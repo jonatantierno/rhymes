@@ -13,7 +13,6 @@ class RhymeSpec extends FlatSpec with Matchers with Rhymes{
   }
 }
 
-@Ignore
 class SyllableSpec extends FlatSpec with Matchers with Syllable {
   "empty word" should "have no syllables" in {
     splitInSyllables("") should be (Nil)
@@ -34,8 +33,8 @@ class SyllableSpec extends FlatSpec with Matchers with Syllable {
     splitInSyllables("transmitir") should be (List("trans", "mi", "tir"))
   } 
   "Exception: Three consonants between two vowels, third being r or l" should "first goes left, rest go right" in {
-    splitInSyllables("abrigo") should be (List("a", "bri", "go"))
-    splitInSyllables("regla") should be (List("re", "gla"))
+    splitInSyllables("desprecio") should be (List("des", "pre", "cio"))
+    splitInSyllables("amplitud") should be (List("am", "pli","tud"))
   } 
   "Four consonants between two vowels" should "group with closest vowel" in {
     splitInSyllables("monstruo") should be (List("mons", "truo"))
@@ -50,6 +49,34 @@ class SyllableSpec extends FlatSpec with Matchers with Syllable {
 class SyllableSpecAux extends FlatSpec with Matchers with Syllable {
   "word" should "split" in {
     splitWhen("abcde", _ == 'd') should be (("abc","de"))
+  }
+  "word" should "split in groups" in {
+    divideInGroups("mesa") should be (List("m","e","s","a"))
+    divideInGroups("ifrusk") should be (List("i","fr","u","sk"))
+    divideInGroups("pasión") should be (List("p","a","s","ió","n"))
+  }
+  "Empty Consonant group between vowels" should "divide correctly" in {
+    divideConsonantsBetweenVowels("") should be ("", "")
+  }
+  "1 char Consonant group between vowels" should "divide correctly" in {
+    divideConsonantsBetweenVowels("l") should be ("", "l")
+  }
+  "Two Consonant group between vowels" should "divide correctly" in {
+    divideConsonantsBetweenVowels("rt") should be ("r", "t")
+  }
+  "Two Consonant group between vowels, second being r or l" should "both go in second part" in {
+    divideConsonantsBetweenVowels("tr") should be ("", "tr")
+    divideConsonantsBetweenVowels("cl") should be ("", "cl")
+  }
+  "Three consonants between two vowels" should "group correctly" in {
+    divideConsonantsBetweenVowels("nsp") should be ("ns", "p")
+  }
+  "Three consonants between two vowels, third being r or l" should "group correctly" in {
+    divideConsonantsBetweenVowels("spr") should be ("s", "pr")
+    divideConsonantsBetweenVowels("mpl") should be ("m", "pl")
+  }
+  "Four consonants between two vowels" should "divide correctly" in {
+    divideConsonantsBetweenVowels("nstr") should be ("ns", "tr")
   }
 }
 
