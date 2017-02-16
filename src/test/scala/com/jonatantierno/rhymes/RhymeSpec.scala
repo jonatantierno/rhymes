@@ -103,5 +103,12 @@ class LetterSpec extends FlatSpec with Matchers with Letter {
     isLetter('ü') should be (true)
     isLetter('.') should be (false)
   }
+}
 
+class SentenceSpec extends FlatSpec with Matchers with Sentence {
+  "Function" should "divide text in sentences" in {
+    splitInSentences("Frase uno, frase dos. Frase tres. Frase cuatro") should be (
+      List("Frase uno"," frase dos"," Frase tres"," Frase cuatro")
+    )
+  }
 }

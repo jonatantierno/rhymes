@@ -4,7 +4,6 @@ trait Rhymes {
    def rhymeConsonant(a: String, b: String): Boolean = true
 }
 
-
 trait Syllable extends Letter{
   def splitInSyllables(word: String): List[String] = { 
     val groups:List[String] = divideInGroups(word)
@@ -75,4 +74,8 @@ trait Letter {
 
   def isConsonant(letter: Char): Boolean = isLetter(letter) && !isVowel(letter) 
   def areConsonants(letters:String): Boolean = letters.forall(isConsonant(_))
+}
+
+trait Sentence {
+  def splitInSentences(text:String): List[String] = text.split("[.;,?!\"]").toList
 }
