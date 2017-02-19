@@ -1,0 +1,65 @@
+package com.jonatantierno.rhymes
+
+object Declarative{
+
+  trait IO[P[_]]{
+    def read(): P[String]
+    def write(msg: String): P[Unit]
+  }
+
+  object IO{
+    def apply[P[_]](implicit IO: IO[P]) = IO
+
+    object Syntax{
+      def read[P[_]]()(implicit IO: IO[P]) = IO.read()
+      def write[P[_]](msg: String)(implicit IO: IO[P]) = IO.write(msg)
+    }
+  }
+
+  object Programs extends Sentence with Stress with Syllable{ 
+    import scalaz.Monad
+    import scalaz.syntax.monad._, IO.Syntax._
+
+    def writeMsg[P[_]: IO: Monad](msg: String): P[Unit] = for {
+      _ <- write(msg)
+    } yield()
+
+    def findRhymes[P[_]: IO: Monad](target: String): P[Unit] = {
+      for{
+        _ <- write(describeWord(target)) 
+        elQuijote <- read
+        _ <- write(getRhymes(target, elQuijote))
+      } yield()
+    }
+
+    def describeWord(word: String): String = {
+      val syllables = splitInSyllables(word)
+      val prettySyllables = syllables.tail.foldLeft(syllables.head)(_ + "-" + _)
+      val stressName = name(syllables)
+      s"$prettySyllables ($stressName)"
+    }
+
+    def getRhymes(target: String, text: String): String = {
+      val rhymes = splitInSentences(text).filter(_.endsWith(target)).map(_.trim).map(_.replace("\n"," ").replace("\r",""))
+
+      if (rhymes.length == 0) "No se ha encontrado"
+      else rhymes.foldLeft("")(_ + "\n" + _).concat("\n")
+    }
+  }
+  
+  object APIInstantiation{
+    import scalaz.{Monad, Id}, Id.Id
+
+    implicit object QuijoteIO extends IO[Id] with Connection{
+      import scala.io.StdIn.readLine
+
+      def read() = get("http://www.gutenberg.org/cache/epub/2000/pg2000.txt")
+      def write(msg: String) = print(msg)
+    }
+
+    implicit object IdMonad extends Monad[Id]{
+      def point[A](a: => A): Id[A] = a
+      def bind[A,B](p: Id[A])(f: A => Id[B]): Id[B] = f(p)
+    }
+  }
+}

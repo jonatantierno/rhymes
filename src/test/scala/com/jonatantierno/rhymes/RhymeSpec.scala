@@ -43,10 +43,47 @@ class SyllableSpec extends FlatSpec with Matchers with Syllable {
   "Double consonants" should "count as just one" in {
     splitInSyllables("arroyo") should be (List("a", "rro", "yo"))
     splitInSyllables("allanamiento") should be (List("a", "lla","na", "mien", "to"))
+    splitInSyllables("marcha") should be (List("mar", "cha"))
+    splitInSyllables("valla") should be (List("va", "lla"))
+    splitInSyllables("cachorro") should be (List("ca", "cho","rro"))
+  }
+  "Hiatus" should "be divided properly" in {
+    splitInSyllables("maría") should be (List("ma", "rí","a"))
+    splitInSyllables("baúl") should be (List("ba", "úl"))
+    splitInSyllables("maíz") should be (List("ma", "íz"))
+    splitInSyllables("salía") should be (List("sa", "lí","a"))
+    splitInSyllables("oía") should be (List("o", "í", "a"))
+  } 
+}
+
+
+
+class LetterSpec extends FlatSpec with Matchers with Letter {
+  "vowels" should "be recognised" in {
+    isVowel('a') should be (true)
+    isVowel('é') should be (true)
+    isVowel('ü') should be (true)
+    isVowel('A') should be (true)
+    isVowel('Í') should be (true)
+    isVowel('z') should be (false)
+    isVowel('ñ') should be (false)
+  }
+
+  "letters" should "be recognised" in {
+    isLetter('A') should be (true)
+    isLetter('M') should be (true)
+    isLetter('Z') should be (true)
+    isLetter('a') should be (true)
+    isLetter('m') should be (true)
+    isLetter('z') should be (true)
+    isLetter('é') should be (true)
+    isLetter('ñ') should be (true)
+    isLetter('ü') should be (true)
+    isLetter('.') should be (false)
   }
 }
 
-class SyllableSpecAux extends FlatSpec with Matchers with Syllable {
+class DivideLettersSpec extends FlatSpec with Matchers with Syllable {
   "word" should "split" in {
     splitWhen("abcde", _ == 'd') should be (("abc","de"))
   }
@@ -78,30 +115,42 @@ class SyllableSpecAux extends FlatSpec with Matchers with Syllable {
   "Four consonants between two vowels" should "divide correctly" in {
     divideConsonantsBetweenVowels("nstr") should be ("ns", "tr")
   }
+  "Double consonant" should "count as one" in {
+    divideConsonantsBetweenVowels("ll") should be ("", "ll")
+    divideConsonantsBetweenVowels("rr") should be ("", "rr")
+    divideConsonantsBetweenVowels("nch") should be ("n", "ch")
+    divideConsonantsBetweenVowels("rch") should be ("r", "ch")
+    divideConsonantsBetweenVowels("ch") should be ("", "ch")
+  }
 }
 
-class LetterSpec extends FlatSpec with Matchers with Letter {
-  "vowels" should "be recognised" in {
-    isVowel('a') should be (true)
-    isVowel('é') should be (true)
-    isVowel('ü') should be (true)
-    isVowel('A') should be (true)
-    isVowel('Í') should be (true)
-    isVowel('z') should be (false)
-    isVowel('ñ') should be (false)
+class StressSpec extends FlatSpec with Matchers with Stress {
+  "Aguda words" should "be stressed in the last syllable" in {
+    stressSyllable(List("co","mer")) should be (0)
+    stressSyllable(List("bi","llón")) should be (0)
+    stressSyllable(List("pa","red")) should be (0)
+    stressSyllable(List("ca","fé")) should be (0)
+  } 
+  "Llana words" should "be stressed in the previous to last syllable" in {
+    stressSyllable(List("dul","ce")) should be (1)
+    stressSyllable(List("dé","bil")) should be (1)
+    stressSyllable(List("lá","piz")) should be (1)
+    stressSyllable(List("me","sa")) should be (1)
+  } 
+  "Llana words ending in n or s" should "be stressed in the previous to last syllable" in {
+    stressSyllable(List("re","tra","tos")) should be (1)
+    stressSyllable(List("jo","ven")) should be (1)
+  } 
+  "Words with tilde" should "be stressed in that syllable" in {
+    stressSyllable(List("bo","lí","gra","fo")) should be (2)
+    stressSyllable(List("có","me","te","lo")) should be (3)
   }
 
-  "letters" should "be recognised" in {
-    isLetter('A') should be (true)
-    isLetter('M') should be (true)
-    isLetter('Z') should be (true)
-    isLetter('a') should be (true)
-    isLetter('m') should be (true)
-    isLetter('z') should be (true)
-    isLetter('é') should be (true)
-    isLetter('ñ') should be (true)
-    isLetter('ü') should be (true)
-    isLetter('.') should be (false)
+  "Stressed words" should "be named correctly" in {
+    name(List("có","me","te","lo")) should be ("Sobresdrújula")
+    name(List("mé","to","do")) should be ("Esdrújula")
+    name(List("pa","na")) should be ("Llana")
+    name(List("la","tón")) should be ("Aguda")
   }
 }
 
