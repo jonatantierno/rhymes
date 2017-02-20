@@ -1,17 +1,5 @@
 package com.jonatantierno.rhymes
 
-trait SentencesTc[T[_]]{
-  def SentenceTc()
-  def lastWord(): T[WordTc[T]]
-}
-trait WordTc[T[_]] {
-  def splitInSyllables(): T[List[Syllable]]
-  def rhymesWith(other: WordTc[T]): T[List[Syllable]]
-  def pretty(): T[String]
-  def stressSylableFromEnd(): T[Int]
-  def stressTypeName(): T[String]
-}
-
 trait Letter {
   def isVowel(letter: Char): Boolean = "aeiouAEIOUáéíóúüÁÉÍÓÚÜ".contains(letter)
 
@@ -43,10 +31,11 @@ trait Syllable extends Letter{
     else if (areConsonants(syllables.last)) appendToLastGroup(syllables.dropRight(1),syllables.last)
     else syllables
   }
+  private def last(syllables: List[String]): String = if (syllables.isEmpty) "" else syllables.last
 
   private def classifyNextGroup(syllables:List[String], nextGroup:String): List[String] =
       if (syllables == List()) List(nextGroup)
-      else if (areConsonants(syllables.last)) 
+      else if (areConsonants(last(syllables))) 
         if (areVowels(nextGroup)) appendToLastGroup(syllables, nextGroup)
         else syllables :+ nextGroup
       else if(areVowels(nextGroup)) syllables :+ nextGroup
@@ -73,7 +62,7 @@ trait Syllable extends Letter{
   private def appendToLastGroup(groups: List[String], nextLetter: Char): List[String] = appendToLastGroup(groups, nextLetter.toString)
 
   private def appendToLastGroup(groups: List[String], nextLetters: String): List[String] = {
-          val lastGroup = groups.last + nextLetters
+          val lastGroup = last(groups) + nextLetters
           groups.dropRight(1) :+ lastGroup 
   }
 
@@ -117,9 +106,16 @@ trait Stress extends Letter{
 
 trait Sentence {
   def splitInSentences(text:String): List[String] = text.split("[.;,?!\"]").toList
+  def lastWord(sentence: String): String = sentence.split(" ").takeRight(1).foldLeft("")(_ concat _);
 }
 
-trait Rhymes {
-   def rhymeConsonant(a: String, b: String): Boolean = true
+trait Rhymes extends Syllable with Stress with Sentence {
+   def rhymesWith(sentence: String, word: String): Boolean = rhymingSuffix(word) equals rhymingSuffix(lastWord(sentence))
+   def rhymesNoRepeat(sentence: String, word: String): Boolean = rhymesWith(sentence, word) && !lastWord(sentence).equals(word) 
+  
+   private def rhymingSuffix(word: String): String = {
+      val syllables = splitInSyllables(word) 
+      syllables.takeRight(stressSyllable(syllables) + 1).foldLeft("")(_ concat _).dropWhile(letter => isConsonant(letter))
+   } 
 }
 

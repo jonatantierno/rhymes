@@ -1,15 +1,19 @@
 package com.jonatantierno.rhymes
 import org.scalatest._
 
-@Ignore
 class RhymeSpec extends FlatSpec with Matchers with Rhymes{
 
-  "'Aguda' words with tilde" should "rhyme with consonant rhyme" in {
-       rhymeConsonant("Salón","jamón") should be (true)
+  "Consonant rhymes" should "be detected" in {
+       rhymesWith("Salón","jamón") should be (true)
+       rhymesWith("Salón","paco") should be (false)
+       rhymesWith("la trócola","cola") should be (false)
   }
-
-  "Non-Aguda words with tilde" should "not rhyme" in {
-       rhymeConsonant("Salón","canon") should be (false)
+  "A word" should "not rhyme with itself" in {
+       rhymesNoRepeat("mundo","mundo") should be (false)
+  }
+  "A word" should "rhyme with its suffix" in {
+       rhymesNoRepeat("el profundo","fundo") should be (true)
+       rhymesNoRepeat("me lo fundo","profundo") should be (true)
   }
 }
 
@@ -156,5 +160,8 @@ class SentenceSpec extends FlatSpec with Matchers with Sentence {
     splitInSentences("Frase uno, frase dos. Frase tres. Frase cuatro") should be (
       List("Frase uno"," frase dos"," Frase tres"," Frase cuatro")
     )
+  }
+  "Last word of an empty sentence" should "be blank" in {
+    lastWord("/n") should be ("/n")
   }
 }

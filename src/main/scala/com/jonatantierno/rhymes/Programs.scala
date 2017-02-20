@@ -16,7 +16,7 @@ object Declarative{
     }
   }
 
-  object Programs extends Sentence with Stress with Syllable{ 
+  object Programs extends Sentence with Stress with Syllable with Rhymes { 
     import scalaz.Monad
     import scalaz.syntax.monad._, IO.Syntax._
 
@@ -36,13 +36,13 @@ object Declarative{
       val syllables = splitInSyllables(word)
       val prettySyllables = syllables.tail.foldLeft(syllables.head)(_ + "-" + _)
       val stressName = name(syllables)
-      s"$prettySyllables ($stressName)"
+      s"$prettySyllables ($stressName)\n"
     }
 
     def getRhymes(target: String, text: String): String = {
-      val rhymes = splitInSentences(text).filter(_.endsWith(target)).map(_.trim).map(_.replace("\n"," ").replace("\r",""))
+      val rhymes = splitInSentences(text).filter(rhymesNoRepeat(_, target)).map(_.replace("\n"," ").replace("\r"," ").trim())
 
-      if (rhymes.length == 0) "No se ha encontrado"
+      if (rhymes.length == 0) "No se ha encontrado\n"
       else rhymes.foldLeft("")(_ + "\n" + _).concat("\n")
     }
   }
