@@ -44,7 +44,7 @@ trait Syllable extends Letter{
     else syllables
   }
 
-  def classifyNextGroup(syllables:List[String], nextGroup:String): List[String] =
+  private def classifyNextGroup(syllables:List[String], nextGroup:String): List[String] =
       if (syllables == List()) List(nextGroup)
       else if (areConsonants(syllables.last)) 
         if (areVowels(nextGroup)) appendToLastGroup(syllables, nextGroup)
@@ -58,21 +58,21 @@ trait Syllable extends Letter{
   def divideInGroups(word:String):List[String] = 
     word.foldLeft(List[String]())(incorporateToGroups).flatMap(divideHiatus(_))
 
-  def incorporateToGroups(groups: List[String], nextLetter: Char):List[String] =
+  private def incorporateToGroups(groups: List[String], nextLetter: Char):List[String] =
       if (groups.isEmpty) List(nextLetter.toString)
       else if (isVowel(groups.last.head) == isVowel(nextLetter)) appendToLastGroup(groups, nextLetter)
       else groups :+ nextLetter.toString
 
-  def divideHiatus(group: String): List[String] = 
+  private def divideHiatus(group: String): List[String] = 
     if (areStrongVowels(group)) stringAsList(group)
     else List(group)
 
-  def stringAsList(group: String): List[String] =
+  private def stringAsList(group: String): List[String] =
     group.map(_.toString).toList
 
-  def appendToLastGroup(groups: List[String], nextLetter: Char): List[String] = appendToLastGroup(groups, nextLetter.toString)
+  private def appendToLastGroup(groups: List[String], nextLetter: Char): List[String] = appendToLastGroup(groups, nextLetter.toString)
 
-  def appendToLastGroup(groups: List[String], nextLetters: String): List[String] = {
+  private def appendToLastGroup(groups: List[String], nextLetters: String): List[String] = {
           val lastGroup = groups.last + nextLetters
           groups.dropRight(1) :+ lastGroup 
   }
@@ -92,10 +92,7 @@ trait Syllable extends Letter{
     else ("","") 
   }
 
-  def endsInRL(consonants: String):Boolean = consonants.endsWith("r") || consonants.endsWith("l") 
-
-  def splitWhen(s:String, predicate:Char => Boolean): (String, String) = 
-    (s.takeWhile(!predicate.apply(_)),s.dropWhile(!predicate.apply(_))) 
+  private def endsInRL(consonants: String):Boolean = consonants.endsWith("r") || consonants.endsWith("l") 
 }
 
 trait Stress extends Letter{

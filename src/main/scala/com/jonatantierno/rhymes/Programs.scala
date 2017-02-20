@@ -49,12 +49,38 @@ object Declarative{
   
   object APIInstantiation{
     import scalaz.{Monad, Id}, Id.Id
+    val quijoteUrl ="http://www.gutenberg.org/cache/epub/2000/pg2000.txt"
+    val quijoteFile ="/tmp/elquijote.txt"
 
     implicit object QuijoteIO extends IO[Id] with Connection{
       import scala.io.StdIn.readLine
 
-      def read() = get("http://www.gutenberg.org/cache/epub/2000/pg2000.txt")
+      def read() = get(quijoteUrl)
       def write(msg: String) = print(msg)
+    }
+
+    implicit object CachedQuijoteIO extends IO[Id] with Connection{
+      import scala.io.StdIn.readLine
+      import scala.io.Source
+      import java.io._
+
+      def read() = cache(quijoteUrl, quijoteFile)
+      def write(msg: String) = print(msg)
+
+      private def cache(url: String, file: String): String = {
+        val cacheFile = new File(file)
+        if (cacheFile.exists) Source.fromFile(cacheFile).getLines.mkString
+        else {
+          val text = get(url)
+          save(text, cacheFile)
+          text
+        }
+      }
+      private def save(text:String,file:File): Unit = {
+          val bw = new BufferedWriter(new FileWriter(file))
+          bw.write(text)
+          bw.close()
+      }
     }
 
     implicit object IdMonad extends Monad[Id]{

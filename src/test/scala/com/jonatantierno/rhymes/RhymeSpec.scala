@@ -84,9 +84,6 @@ class LetterSpec extends FlatSpec with Matchers with Letter {
 }
 
 class DivideLettersSpec extends FlatSpec with Matchers with Syllable {
-  "word" should "split" in {
-    splitWhen("abcde", _ == 'd') should be (("abc","de"))
-  }
   "word" should "split in groups" in {
     divideInGroups("mesa") should be (List("m","e","s","a"))
     divideInGroups("ifrusk") should be (List("i","fr","u","sk"))
