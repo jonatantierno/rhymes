@@ -69,7 +69,7 @@ object Declarative{
 
       private def cache(url: String, file: String): String = {
         val cacheFile = new File(file)
-        if (cacheFile.exists) Source.fromFile(cacheFile).getLines.mkString
+        if (cacheFile.exists) Source.fromFile(cacheFile).getLines.mkString(" ")
         else {
           val text = get(url)
           save(text, cacheFile)
