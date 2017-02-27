@@ -28,9 +28,24 @@ object Declarative{
       for{
         _ <- write(describeWord(target)) 
         elQuijote <- read
-        _ <- write(getRhymes(target, elQuijote))
+        _ <- write(getRhymesAsString(target, elQuijote))
       } yield()
     }
+
+    def findVerses[P[_]: IO: Monad](verse: Array[String]): P[Unit] = {
+      val target: String = verse.reduce(_ + " " + _)
+      for{
+        _ <- write(describeWord(target.replace(" ","")) )
+        elQuijote <- read
+        _ <- write(getVerses(target, elQuijote))
+      } yield()
+    }
+
+    def getVerses(target: String, text: String): String = 
+      flattenResult(
+        getRhymes(target, text)
+          .filter((rhyme: String) => numberOfSyllables(rhyme) == numberOfSyllables(target))
+        )
 
     def describeWord(word: String): String = {
       val syllables = splitInSyllables(word)
@@ -39,12 +54,16 @@ object Declarative{
       s"$prettySyllables ($stressName)\n"
     }
 
-    def getRhymes(target: String, text: String): String = {
-      val rhymes = splitInSentences(text).filter(rhymesNoRepeat(_, target)).map(_.replace("\n"," ").replace("\r"," ").trim())
+    def getRhymesAsString(target: String, text: String): String = 
+      flattenResult(getRhymes(target,text))
 
-      if (rhymes.length == 0) "No se ha encontrado\n"
-      else rhymes.foldLeft("")(_ + "\n" + _).concat("\n")
-    }
+    def flattenResult(res: List[String]): String =
+      if (res.length == 0) "No se ha encontrado\n"
+      else res.foldLeft("")(_ + "\n" + _).concat("\n")
+
+    def getRhymes(target: String, text: String): List[String] = 
+      splitInSentences(text).filter(rhymesNoRepeat(_, target)).map(_.replace("\n"," ").replace("\r"," ").trim())
+
   }
   
   object APIInstantiation{

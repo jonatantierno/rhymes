@@ -5,11 +5,11 @@ object Main {
   def main(args: Array[String]): Unit = {
     import Declarative._
     import APIInstantiation.{CachedQuijoteIO, IdMonad}
-    import Programs.{writeMsg, findRhymes}
+    import Programs.{writeMsg, findRhymes, findVerses}
 
-    if (args.length == 0 ) writeMsg("Escribe una palabra, la separo en sílabas y la busco en el quijote.\n");
-    else {
-      findRhymes(args(0))
-    }
+    if (args.length == 0 ) writeMsg("Escribe una palabra, y la separo en sílabas y busco frases que rimen en el quijote.\n" + 
+      "Escribe un verso, y busco otros.");
+    else if (args.length == 1) findRhymes(args(0))
+    else findVerses(args)
   }
 }

@@ -57,6 +57,8 @@ class SyllableSpec extends FlatSpec with Matchers with Syllable {
     splitInSyllables("maíz") should be (List("ma", "íz"))
     splitInSyllables("salía") should be (List("sa", "lí","a"))
     splitInSyllables("oía") should be (List("o", "í", "a"))
+    splitInSyllables("preescolar") should be (List("pre", "es", "co", "lar"))
+    splitInSyllables("saeta") should be (List("sa", "e", "ta"))
   } 
 }
 
@@ -163,5 +165,13 @@ class SentenceSpec extends FlatSpec with Matchers with Sentence {
   }
   "Last word of an empty sentence" should "be blank" in {
     lastWord("/n") should be ("/n")
+  }
+  "Hiatus" should "be ignored when in consecutive words" in {
+    splitSentenceInSyllables(List("siempre","hace", "frío")) should be (List("siem", "preha","ce", "frío"))
+    splitSentenceInSyllables(List("siembra","antes", "de","tiempo")) should be (List("siem", "braan","tes", "de","tiem","po"))
+  } 
+  "number of syllables in sentence" should "be correct" in {
+    numberOfSyllables("mi carro me lo robaron") should be (8) 
+    numberOfSyllables("siempre estás bien") should be (4) 
   }
 }

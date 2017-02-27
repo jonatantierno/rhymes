@@ -104,9 +104,17 @@ trait Stress extends Letter{
   }
 }
 
-trait Sentence {
+trait Sentence extends Syllable{
   def splitInSentences(text:String): List[String] = text.split("[.;,?!\"]").toList
-  def lastWord(sentence: String): String = sentence.split(" ").takeRight(1).foldLeft("")(_ concat _);
+  def lastWord(sentence: String): String = sentence.split(" ").takeRight(1).foldLeft("")(_ concat _)
+  def numberOfSyllables(sentence: String): Int = splitInSyllables(sentence.replace(" ", "")).size
+  def splitSentenceInSyllables(sentence: List[String]): List[String] = {
+    def hiatusC(c: String): Boolean = (areVowels(c) || c.startsWith("h")) 
+    def hiatus(l: String, r: String): Boolean = hiatusC(l.takeRight(1)) && hiatusC(l.take(1)) 
+
+    val wordsInSyllables: List[List[String]] = sentence.map(splitInSyllables(_))
+    Nil
+  }
 }
 
 trait Rhymes extends Syllable with Stress with Sentence {
