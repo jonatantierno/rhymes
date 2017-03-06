@@ -167,9 +167,14 @@ class SentenceSpec extends FlatSpec with Matchers with Sentence {
     lastWord("/n") should be ("/n")
   }
   "Hiatus" should "be ignored when in consecutive words" in {
-    splitSentenceInSyllables(List("siempre","hace", "frío")) should be (List("siem", "preha","ce", "frío"))
+    splitSentenceInSyllables(List("siempre","hace", "frío")) should be (List("siem", "preha","ce", "frí", "o"))
     splitSentenceInSyllables(List("siembra","antes", "de","tiempo")) should be (List("siem", "braan","tes", "de","tiem","po"))
   } 
+  "Letter y" should "form hiatus in sentences when possible" in {
+    splitSentenceInSyllables(List("mira","y", "aprende")) should be (List("mi", "ray","a", "pren", "de"))
+    splitSentenceInSyllables(List("mira","y", "sigue")) should be (List("mi", "ray","si", "gue"))
+    splitSentenceInSyllables(List("la","yema")) should be (List("la", "ye","ma"))
+  }
   "number of syllables in sentence" should "be correct" in {
     numberOfSyllables("mi carro me lo robaron") should be (8) 
     numberOfSyllables("siempre estás bien") should be (4) 

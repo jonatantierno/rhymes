@@ -107,13 +107,25 @@ trait Stress extends Letter{
 trait Sentence extends Syllable{
   def splitInSentences(text:String): List[String] = text.split("[.;,?!\"]").toList
   def lastWord(sentence: String): String = sentence.split(" ").takeRight(1).foldLeft("")(_ concat _)
-  def numberOfSyllables(sentence: String): Int = splitInSyllables(sentence.replace(" ", "")).size
-  def splitSentenceInSyllables(sentence: List[String]): List[String] = {
-    def hiatusC(c: String): Boolean = (areVowels(c) || c.startsWith("h")) 
-    def hiatus(l: String, r: String): Boolean = hiatusC(l.takeRight(1)) && hiatusC(l.take(1)) 
+  def numberOfSyllables(sentence: String): Int = splitSentenceInSyllables(sentence.split(" ").toList).size
+  def splitSentenceInSyllables(sentence: List[String]): List[String] = { 
+    def hiatusLeft(syllable: String): Boolean = isVowel(syllable.lastOption.getOrElse('-')) 
+    def hiatusRight(syllable: String): Boolean = isVowel(syllable.headOption.getOrElse('-')) || syllable.startsWith("h") || syllable.equals("y")
+    def possibleHiatusLeft(syllables: List[String]): Boolean = syllables match { 
+      case Nil => false 
+      case a => hiatusLeft(a.lastOption.getOrElse(""));
+    }
+    def possibleHiatusRight(rest: List[String]): Boolean = rest match {
+      case Nil => false 
+      case head :: _ => hiatusRight(head);
+    } 
+    def fuse(syllables: List[String], rest: List[String]): List[String] =
+      syllables.dropRight(1) ::: syllables.takeRight(1).map(_ concat rest.head) ::: rest.drop(1)
 
-    val wordsInSyllables: List[List[String]] = sentence.map(splitInSyllables(_))
-    Nil
+    sentence.map(splitInSyllables(_)).foldLeft(Nil:List[String])( (syllables, rest) => 
+        if (possibleHiatusLeft(syllables) && possibleHiatusRight(rest)) fuse(syllables, rest)
+        else syllables ::: rest 
+        )
   }
 }
 

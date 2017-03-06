@@ -35,7 +35,7 @@ object Declarative{
     def findVerses[P[_]: IO: Monad](verse: Array[String]): P[Unit] = {
       val target: String = verse.reduce(_ + " " + _)
       for{
-        _ <- write(describeWord(target.replace(" ","")) )
+        _ <- write(describeWord(lastWord(target).replace(" ","")) )
         elQuijote <- read
         _ <- write(getVerses(target, elQuijote))
       } yield()
@@ -43,7 +43,7 @@ object Declarative{
 
     def getVerses(target: String, text: String): String = 
       flattenResult(
-        getRhymes(target, text)
+        getRhymes(lastWord(target), text)
           .filter((rhyme: String) => numberOfSyllables(rhyme) == numberOfSyllables(target))
         )
 
