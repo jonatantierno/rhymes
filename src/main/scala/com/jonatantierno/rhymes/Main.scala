@@ -8,12 +8,15 @@ object Main {
     import Programs.{writeMsg, findRhymes, findVerses}
     import WebServer._
 
-    if (args.length == 0 ) start() 
-    else if (args.length == 1 && args(0) == "help") writeMsg(
-        "Escribe una palabra, y la separo en sílabas y busco frases que rimen en el quijote.\n" + 
-        "Escribe un verso, y busco otros."
+    args match {
+        case Array() =>  writeMsg(
+            "Escribe una palabra, y la separo en sílabas y busco frases que rimen en el quijote.\n" + 
+            "Escribe un verso, y busco otros."
         );
-    else if (args.length == 1) findRhymes(args(0))
-    else findVerses(args)
+        case Array("start", port) => start(port.toInt)
+        case Array("start") => start(8080)
+        case Array(oneWord) => findRhymes(oneWord)
+        case severalWords => findVerses(severalWords)
+    }
   }
 }
