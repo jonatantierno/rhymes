@@ -1,6 +1,6 @@
 scalaVersion := "2.12.1"
     
-lazy val root = (project in file("."))
+lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging)
 .settings(
         version := "1.0",
         name := "rhymes",
