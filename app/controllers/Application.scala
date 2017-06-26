@@ -11,9 +11,9 @@ import play.api.db._
 
 object Application extends Controller with Verse {
 
-  def rhymes = Action {
+  def rhymes(sentence: String) = Action {
 
-    Ok(describeWord("bolígrafo"))
+    Ok(rhyme(sentence))
   }
 
   def index = Action {
@@ -44,9 +44,9 @@ object Application extends Controller with Verse {
     if (res.length == 0) "No se ha encontrado\n"
     else res.foldLeft("")(_ + "\n<p>" +_+ "</p>")
 
-  def rhyme(sentence: List[String]): String = sentence match {
+  def rhyme(sentenceAsString: String): String = splitInSentences(sentenceAsString) match {
     case List() => "Dame una palabra o frase, y busco frases que rimen en el Quijote." 
     case word :: List() => inParagraphs(getRhymes(word, Quijote.get()))
-    case _ => inParagraphs(getVersesAsList(sentence.foldLeft("")(_ + " " + _ ), Quijote.get()))
+    case _ => inParagraphs(getVersesAsList(sentenceAsString.foldLeft("")(_ + " " + _ ), Quijote.get()))
   }
 }

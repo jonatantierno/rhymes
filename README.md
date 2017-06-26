@@ -1,10 +1,12 @@
 # Rhymes
-Esta aplicacion programada en Scala maneja rimas en castellano, permitiendo encontrar frases en un texto que rimen con la palabra escogida, por ejemplo. Para ejecutar la aplicacacion directamente, podemos usar sbt:
+Esta aplicacion programada en Scala maneja rimas en castellano, permitiendo encontrar frases en un texto que rimen con la palabra escogida, por ejemplo. 
 
-* $ sbt "run Este hola mundo rima"
+Esta implementada como una aplicacion web mediante el framework Play en Heroku.
 
-No olvides las comillas!
+Para ejecutar la aplicacion en local con el cliente de heroku:
 
-Si no se le pasan argumentos al comando "run", se levanta un servidor Web local. Prueba con:
+* $ heroku local
 
-http://localhost:8080/rhyme/Dulcinea/y/su/borrico
+Y luego escribiendo en tu navegador:
+
+http://localhost:5000/rhymes/Dulcinea%20y%20su%20borrico

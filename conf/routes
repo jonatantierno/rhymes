@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /db                         controllers.Application.db
-GET     /rhymes                     controllers.Application.rhymes
+GET     /rhymes/:sentence           controllers.Application.rhymes(sentence: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
