@@ -11,9 +11,11 @@ import play.api.db._
 
 object Application extends Controller with Verse {
 
+  implicit val myCustomCharset = Codec.javaSupported("unicode")
+
   def rhymes(sentence: String) = Action {
 
-    Ok(rhyme(sentence))
+    Ok(rhyme(sentence)).as(HTML)
   }
 
   def index = Action {
