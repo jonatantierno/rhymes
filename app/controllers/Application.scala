@@ -14,7 +14,6 @@ object Application extends Controller with Verse {
   val quijote = Source.fromFile(Play.getFile("conf/quijote.txt")).getLines.mkString
 
   def rhymes(sentence: String) = Action {
-    System.out.println(quijote.substring(0,200))
     Ok(rhyme(sentence)).as(HTML)
   }
   
