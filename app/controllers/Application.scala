@@ -5,19 +5,19 @@ import play.api.mvc._
 import play.api.cache.Cache
 import play.api.Play.current
 import com.jonatantierno.rhymes.Verse
-import com.jonatantierno.rhymes.Quijote
+import scala.io.Source
 
 import play.api.db._
 
 object Application extends Controller with Verse {
 
-  implicit val myCustomCharset = Codec.javaSupported("unicode")
+  val quijote = Source.fromFile(Play.getFile("conf/quijote.txt")).getLines.mkString
 
   def rhymes(sentence: String) = Action {
-
+    System.out.println(quijote.substring(0,200))
     Ok(rhyme(sentence)).as(HTML)
   }
-
+  
   def index = Action {
     Ok(views.html.index(null))
   }
@@ -42,13 +42,14 @@ object Application extends Controller with Verse {
     Ok(out)
   }
 
+  def rhyme(sentenceAsString: String): String = splitInSentences(sentenceAsString) match {
+    case List() => "Dame una palabra o frase, y busco frases que rimen en el Quijote." 
+    case word :: List() => inParagraphs(getRhymes(word, quijote))
+    case _ => inParagraphs(getVersesAsList(sentenceAsString.foldLeft("")(_ + " " + _ ), quijote))
+  }
+
   def inParagraphs(res: List[String]): String =
     if (res.length == 0) "No se ha encontrado\n"
     else res.foldLeft("")(_ + "\n<p>" +_+ "</p>")
 
-  def rhyme(sentenceAsString: String): String = splitInSentences(sentenceAsString) match {
-    case List() => "Dame una palabra o frase, y busco frases que rimen en el Quijote." 
-    case word :: List() => inParagraphs(getRhymes(word, Quijote.get()))
-    case _ => inParagraphs(getVersesAsList(sentenceAsString.foldLeft("")(_ + " " + _ ), Quijote.get()))
-  }
 }

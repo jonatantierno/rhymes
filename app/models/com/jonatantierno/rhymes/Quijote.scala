@@ -6,8 +6,10 @@ object Quijote extends Connection {
 
     val quijoteUrl ="http://www.gutenberg.org/cache/epub/2000/pg2000.txt"
     val quijoteFile ="/tmp/elquijote.txt"
+    val quijoteLocal ="./elquijote.txt"
 
-    def get() : String = get(quijoteUrl)
+    def get() : String = Source.fromFile(quijoteLocal).getLines.mkString(" ")
+
     def getCached() : String = cache(quijoteUrl, quijoteFile)
 
       private def cache(url: String, file: String): String = {
