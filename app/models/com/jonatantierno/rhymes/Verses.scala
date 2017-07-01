@@ -8,6 +8,13 @@ trait Verse extends Rhymes{
         getRhymes(lastWord(target), text)
           .filter((rhyme: String) => numberOfSyllables(rhyme) == numberOfSyllables(target))
 
+    def findRhymesInListAsList(target: String, text: List[String]): List[String] = 
+        getRhymesFromList(lastWord(target), text)
+
+    def findRhymesInListAsListStrict(target: String, text: List[String]): List[String] = 
+        findRhymesInListAsList(target,text)
+          .filter((rhyme: String) => numberOfSyllables(rhyme) == numberOfSyllables(target))
+
     def describeWord(word: String): String = {
       val syllables = splitInSyllables(word)
       val prettySyllables = syllables.tail.foldLeft(syllables.head)(_ + "-" + _)
@@ -24,4 +31,8 @@ trait Verse extends Rhymes{
 
     def getRhymes(target: String, text: String): List[String] = 
       splitInSentences(text).filter(rhymesNoRepeat(_, target)).map(_.replace("\n"," ").replace("\r"," ").trim())
+
+    def getRhymesFromList(target: String, text: List[String]): List[String] = 
+      text.filter(rhymesNoRepeat(_, target)).map(_.replace("\n"," ").replace("\r"," ").trim())
+    
 }

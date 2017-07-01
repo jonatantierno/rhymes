@@ -11,10 +11,15 @@ import play.api.db._
 
 object Application extends Controller with Verse {
 
-  val quijote = Source.fromFile(Play.getFile("conf/quijote.txt")).getLines.mkString
+  val quijote = Source.fromFile(Play.getFile("conf/quijote.txt")).getLines.mkString(" ")
+  val quijoteList = splitInSentences(quijote)
 
-  def rhymes(sentence: String) = Action {
-    Ok(rhyme(sentence)).as(HTML)
+  def rhyme(sentence: String) = Action {
+    Ok(rhymes(sentence)).as(HTML)
+  }
+
+  def rhymeStrict(sentence: String) = Action {
+    Ok(rhymesStrict(sentence)).as(HTML)
   }
   
   def index = Action {
@@ -41,11 +46,8 @@ object Application extends Controller with Verse {
     Ok(out)
   }
 
-  def rhyme(sentenceAsString: String): String = splitInSentences(sentenceAsString) match {
-    case List() => "Dame una palabra o frase, y busco frases que rimen en el Quijote." 
-    case word :: List() => inParagraphs(getRhymes(word, quijote))
-    case _ => inParagraphs(getVersesAsList(sentenceAsString.foldLeft("")(_ + " " + _ ), quijote))
-  }
+  def rhymes(sentence: String): String = inParagraphs(findRhymesInListAsList(sentence, quijoteList))
+  def rhymesStrict(sentence: String): String = inParagraphs(findRhymesInListAsListStrict(sentence, quijoteList))
 
   def inParagraphs(res: List[String]): String =
     if (res.length == 0) "No se ha encontrado\n"
