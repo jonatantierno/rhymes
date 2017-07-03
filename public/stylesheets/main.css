@@ -1,6 +1,6 @@
 .jumbotron {
   color: black;
-  padding-bottom: 80px;
+  padding-bottom: 30px;
 }
 .jumbotron .btn-primary {
 }
@@ -27,4 +27,13 @@
 }
 .jumbotron .lang-logo img {
   max-width: 100%;
+  margin-top: -20px;
+}
+.col-sm-6 {
+  padding-bottom: 30px;
+}
+.license {
+    font-size: small;
+    color: grey;
+    text-align: right;
 }

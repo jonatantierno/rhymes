@@ -15,6 +15,10 @@ class RhymeSpec extends FlatSpec with Matchers with Rhymes{
        rhymesNoRepeat("el profundo","fundo") should be (true)
        rhymesNoRepeat("me lo fundo","profundo") should be (true)
   }
+  "A bad word" should "not rhyme with anything" in {
+       rhymesWith("","") should be (false)
+       rhymesWith("jj","1614") should be (false)
+  }
 }
 
 class SyllableSpec extends FlatSpec with Matchers with Syllable {
@@ -23,6 +27,11 @@ class SyllableSpec extends FlatSpec with Matchers with Syllable {
   }
   "1 letter word" should "have 1 syllable" in {
     splitInSyllables("a") should be (List("a"))
+  }
+  "Final symbols" should "be ignored" in {
+    splitInSyllables("a,") should be (List("a"))
+    splitInSyllables("a.") should be (List("a"))
+    splitInSyllables("a.,.") should be (List("a"))
   }
   "Two consonants between two vowels" should "group each with its closest vowel" in {
     splitInSyllables("arte") should be (List("ar","te"))

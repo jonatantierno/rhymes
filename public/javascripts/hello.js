@@ -1,10 +1,39 @@
 $( document ).ready(function() {
+    $('#not_found').hide()
+    $('#rhymes').hide()
+    $('#searching').hide()
+
     $('#go').click(function() {
-        $.get("rhymes/" + encodeURI($("#verse").val()), function( result ) {
-            $('#rhymes').html(result);
-        });
-        $.get("rhymes/strict/" + encodeURI($("#verse").val()), function( result ) {
-            $('#rhymes_strict').html(result);
-        });
+        findRhymes()
+    });
+    $('#input_verse').keypress(function(event) {
+        if(event.which == '13'){
+            findRhymes()
+        } 
     });
 });
+
+function findRhymes() {
+    $('#rhymes').hide("fast")
+    $('#not_found').hide("fast")
+    $('#searching').show("fast")
+    $.get("rhymes/strict/" + encodeURI($("#input_verse").val()), function( result ) {
+        if (result == "No se ha encontrado\n") {
+            $.get("rhymes/" + encodeURI($("#input_verse").val()), function( result ) {
+                $('#searching').hide("fast")
+                if (result == "No se ha encontrado\n") {
+                    $('#not_found').show("fast")
+                }    
+                else {
+                    $('#rhymes').html(result) 
+                    $('#rhymes').show("fast")
+                }
+            });
+        }
+        else {
+            $('#searching').hide("fast")
+            $('#rhymes').html(result) 
+            $('#rhymes').show("fast")
+        }
+    });
+}

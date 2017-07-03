@@ -23,8 +23,12 @@ trait Letter {
 }
 
 trait Syllable extends Letter{
+  def clean(word: String): String = if (word.isEmpty()) word 
+        else if (isLetter(word.charAt(word.length-1))) word
+        else clean(word.dropRight(1))
+
   def splitInSyllables(word: String): List[String] = { 
-    val groups:List[String] = divideInGroups(word)
+    val groups:List[String] = divideInGroups(clean(word))
     val syllables:List[String] = groups.foldLeft(List[String]())(classifyNextGroup)
 
     if(syllables == List()) List() 
@@ -105,7 +109,7 @@ trait Stress extends Letter{
 }
 
 trait Sentence extends Syllable{
-  def splitInSentences(text:String): List[String] = text.split("[.;,?!\"]").toList
+  def splitInSentences(text:String): List[String] = text.split("[.:;,?!\"]").toList
   def lastWord(sentence: String): String = sentence.split(" ").takeRight(1).foldLeft("")(_ concat _)
   def numberOfSyllables(sentence: String): Int = splitSentenceInSyllables(sentence.split(" ").toList).size
   def splitSentenceInSyllables(sentence: List[String]): List[String] = { 
@@ -130,7 +134,11 @@ trait Sentence extends Syllable{
 }
 
 trait Rhymes extends Syllable with Stress with Sentence {
-   def rhymesWith(sentence: String, word: String): Boolean = rhymingSuffix(word) equals rhymingSuffix(lastWord(sentence))
+   def rhymesWith(sentence: String, word: String): Boolean = {
+        val suffix = rhymingSuffix(word)
+        if (suffix isEmpty) false
+        else rhymingSuffix(word) equals rhymingSuffix(lastWord(sentence))
+   }
    def rhymesNoRepeat(sentence: String, word: String): Boolean = rhymesWith(sentence, word) && !lastWord(sentence).equals(word) 
   
    private def rhymingSuffix(word: String): String = {

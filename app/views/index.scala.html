@@ -3,8 +3,8 @@
 @main("Robocervantes") {
 
 <div class="jumbotron text-center">
-    <h1>Robocervantes</h1>
-    <p>Busco rimas elegantes</p>
+    <h1>Robot cervantino</h1>
+    <p>De lengua presta e ingenio fino</p>
 </div>
 <div class="container">
   @if(message != null){
@@ -15,26 +15,58 @@
   <div class="container">
       Hola, soy Robocervantes,<br/> 
       el Robot hispanohablante.<br/> 
-      No soy Bender, no obstante,<br/> 
-      puedes besar mi trasero brillante.<br/> 
+      El Quijote entero está en mi cabeza<br/> 
+      y en él busco rimas con presteza<br/> 
   </div> <!-- container-->
+  <hr>
   <div class="container">
-      <label for="verse">Escribe aquí la frase para rimar:</label>
-      <div class="form-group">
-          <input type="text" class="form-control" id="verse">
+      <label for="verse">Escribe una frase que quieras rimar <br>
+          y pulsa Enter para empezar: 
+      </label>
+      <div class="input-group">
+          <input type="text" class="form-control" id="input_verse">
+          <div class="input-group-btn">
+              <button type="submit" class="btn btn-default" id="go">
+                  <i class="glyphicon glyphicon-search"></i>
+              </button>
+          </div>
       </div>
-      <button type="submit" class="btn btn-default" id="go">Pulsa para buscar</button>
-  </div id="result"> <!-- container -->
-  <div class="container" id="rhymes">
   </div> <!-- container -->
-  <div class="container" id="rhymes_strict">
+  <br>
+  <div class="container">
+      <div class="alert alert-info" id="searching">
+          Estoy buscando, ten paciencia...<br>
+          esto de rimar tiene su ciencia.
+      </div> <!-- searching-->
+      <div class="alert alert-danger" id="not_found">
+          Ninguna rima, del derecho o del revés.<br>
+          ¿No habrás puesto palabras en inglés?<br>
+          Escribe otra cosa y prueba de nuevo,<br>
+          y te buscaré las rimas que te debo.
+      </div> <!-- searching-->
+      <div class="well" id="rhymes">
+      </div> <!-- container -->
   </div> <!-- container -->
   <hr>
-  <div class="alert alert-info text-center" role="alert">
-      En el Quijote no soy ningun experto.<br/> 
-      Ni lo he leido entero, es cierto.<br/> 
-      Esto es solo un ejercicio sano<br/> 
-      porque me gusta rimar en castellano.<br/> 
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-6">
+              En el Quijote no soy ningun experto.<br/> 
+              Ni lo he leido entero, es cierto.<br/> 
+              Esto es solo un ejercicio sano<br/> 
+              porque me gusta rimar en castellano.<br/> 
+          </div> <!-- col -->
+          <div class="col-sm-6">
+              Es libre y abierta esta aplicación,<br/> 
+              el codigo está en esta <a href="https://github.com/jonatantierno/rhymes">dirección</a>.<br/>
+              Y para decirme algo, sea bonito o feo,<br/> 
+              aquí te dejo mi <a href="mailto:jonatantierno@@gmail.com">correo</a>.<br/>
+          </div> <!-- col -->
+      </div> <!-- row -->
+  </div> <!-- container -->
+  <hr>
+  <div class="license">
+      <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">licencia de Creative Commons Reconocimiento 4.0 Internacional</a>.
   </div>
 </div>
 
