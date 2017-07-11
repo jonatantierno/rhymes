@@ -12,7 +12,7 @@ import play.api.db._
 object Application extends Controller with Verse {
 
   val quijote = Source.fromFile(Play.getFile("conf/quijote.txt")).getLines.mkString(" ")
-  val quijoteList = splitInSentences(quijote)
+  val quijoteList = splitInSentences(quijote).distinct
 
   def rhyme(sentence: String) = Action {
     Ok(rhymes(sentence)).as(HTML)
